@@ -1,8 +1,8 @@
 const state = {
   screen: 'home', // 'home' | 'exchange' | 'success' | 'toolbox'
-  balance: 9691068, // Default from Toolbox screenshot
-  coins: 8146530603020,
-  upcomingBalance: 2000000, // Default from Toolbox screenshot
+  balance: 9690899.43, // Default from TikTok LIVE Rewards screenshot
+  coins: 798525002, // Default coin equivalent
+  upcomingBalance: 2000000, // Default from screenshot
   username: '',
   selected: 0,
   profile: null,
@@ -442,7 +442,7 @@ function home() {
         <strong id="homeCardBalance">${moneyFmt(state.balance)}</strong>
       </div>
       <div class="card">
-        <span>Upcoming rewards</span>
+        <span>Upcoming rewards <span class="upcoming-dot"></span></span>
         <strong>${moneyFmt(state.upcomingBalance)}</strong>
       </div>
     </section>
@@ -457,7 +457,10 @@ function home() {
       <!-- Both Exchange and Withdraw open the same Exchange page as requested -->
       <button class="btn primary" onclick="openExchange()">Exchange</button>
       <button class="btn secondary" onclick="openExchange()">Withdraw</button>
-      <div class="limit">Daily withdrawal limit (Remain/Total): ${moneyFmt(1000)}/${moneyFmt(1000)}</div>
+      <div class="limit-row">
+        <span class="limit-label">Daily withdrawal limit (Remain/Total)</span>
+        <span class="limit-value">${moneyFmt(1000)}/${moneyFmt(1000)}</span>
+      </div>
     </section>
     
     <section class="section">
@@ -1109,7 +1112,7 @@ function success() {
         </div>
       </div>
       <!-- When returning to home screen, triggers decreasing red countdown animation -->
-      <button class="btn green" onclick="set({ screen: 'home', animateHome: true })">← Go back</button>
+      <button class="btn ${isRedTheme ? 'primary' : 'green'}" onclick="set({ screen: 'home', animateHome: true })">Go back</button>
     </div>
   `;
 }
@@ -1281,6 +1284,13 @@ function toolbox() {
           <div class="tb-link" onclick="previewLoadingAnimation(state.toolbox.searchLoading.style)">Preview animation</div>
         </div>
 
+        <!-- Push Notification Preview -->
+        <div class="toolbox-card">
+          <div class="toolbox-label">Push Notification</div>
+          <div class="toolbox-sub">Preview the top "Successfully sent coins to recipient" banner</div>
+          <button class="tb-btn" style="width:100%; padding:10px; margin-top:4px;" onclick="showTopNotification()">Show Notification Banner</button>
+        </div>
+
         <!-- Save Button -->
         <div class="toolbox-save-wrap">
           <button class="btn primary toolbox-save-btn" onclick="saveToolbox()">Save</button>
@@ -1398,14 +1408,17 @@ function render() {
             state.balance = endBalance;
             state.coins = endCoins;
             if (homeBal) {
+              homeBal.style.transition = 'color 0.4s ease';
               homeBal.style.color = 'var(--ink)';
               homeBal.textContent = moneyFmt(endBalance);
             }
             if (homeCardBal) {
+              homeCardBal.style.transition = 'color 0.4s ease';
               homeCardBal.style.color = 'var(--ink)';
               homeCardBal.textContent = moneyFmt(endBalance);
             }
             if (homeCoins) {
+              homeCoins.style.transition = 'color 0.4s ease';
               homeCoins.style.color = 'var(--muted)';
               homeCoins.innerHTML = `= ${moneyFmt(endBalance)} ( <span class="coin">🪙</span> ${coinFmt(endCoins)} )`;
             }
